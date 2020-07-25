@@ -20,17 +20,8 @@ steps:
   inputs:
     OperationType: 'Start'
 - task: VSBuild@1
-  inputs:
-    solution: '**\*.sln'
-    msbuildArgs: Optional
-    platform: Optional
-    configuration: Optional
-    clean: false
 
 - task: VSTest@2
-  inputs:
-    platform: Optional
-    configuration: Optional
 
 - task: Windows Application Driver@0
   inputs:
