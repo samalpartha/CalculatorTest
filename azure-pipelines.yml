@@ -16,6 +16,9 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
+- task: Windows Application Driver@0
+  inputs:
+    OperationType: 'Start'
 - task: VSBuild@1
   inputs:
     solution: '**\*.sln'
@@ -23,17 +26,15 @@ steps:
     platform: Optional
     configuration: Optional
     clean: false
-    maximumCpuCount: false
-    restoreNugetPackages: false
-    msbuildArchitecture: 'x86'
-    logProjectEvents: true
-    createLogFile: false
-    logFileVerbosity: 'normal'
 
 - task: VSTest@2
   inputs:
     platform: Optional
     configuration: Optional
+
+- task: Windows Application Driver@0
+  inputs:
+    OperationType: 'Stop'
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
