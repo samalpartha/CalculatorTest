@@ -1,6 +1,6 @@
 # Universal Windows Platform
 # Build a Universal Windows Platform project using Visual Studio.
-# Add steps that test and distribute an app, save build artifacts, and more:
+ #Add steps that test and distribute an app, save build artifacts, and more:
 # https://aka.ms/yaml
 
 trigger:
@@ -11,9 +11,41 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'x86|x64|ARM'
-  buildConfiguration: 'Release'
+  buildPlatform: Optional
 
 steps:
 - task: NuGetToolInstaller@1
 
+- task: VSBuild@1
+  inputs:
+    solution: '**\*.sln' 
+    vsVersion: 'latest'
+    msbuildArgs: Optional
+    platform: Optional
+    configuration: Optional
+    clean: false
+    maximumCpuCount: false
+    restoreNugetPackages: false
+    msbuildArchitecture: 'x86'
+    logProjectEvents: true
+    createLogFile: false
+    logFileVerbosity: 'normal'
+
+- task: VSTest@2
+  inputs:
+    platform: Optional
+    configuration: Optional
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**\bin\$(BuildConfiguration)\**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
