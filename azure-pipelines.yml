@@ -21,7 +21,6 @@ steps:
     OperationType: 'Start'
 - task: VSBuild@1
 
-- task: VSTest@2
 
 - task: Windows Application Driver@0
   inputs:
